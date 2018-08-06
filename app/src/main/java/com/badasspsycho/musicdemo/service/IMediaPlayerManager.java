@@ -39,6 +39,8 @@ public interface IMediaPlayerManager {
     }
 
     interface OnMediaListener {
-        void onStateChanged(@MediaState int mediaState);
+        void notifyMediaStateChanged(@MediaState int mediaState);
+
+        void onSongLoaded(long duration);
     }
 }

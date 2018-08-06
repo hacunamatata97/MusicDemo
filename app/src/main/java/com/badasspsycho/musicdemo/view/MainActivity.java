@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity
     private ImageView mButtonPlay;
     private ImageView mButtonNext;
 
+    private AlertDialog mDialog;
+
     private PlayerService mService;
     private boolean mBound = false;
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity
             mService = binder.getService();
             mService.addListener(MainActivity.this);
             mService.playSong(R.raw.shigatsu_wa_kimi_no_uso);
-            updateDuration();
+            onSongLoaded(mService.getDuration());
             mBound = true;
         }
 
@@ -78,13 +80,13 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         if (mBound) {
-            updateDuration();
+            onSongLoaded(mService.getDuration());
         }
     }
 
-    private void updateDuration() {
-        mTotalTime.setText(Utilities.milliSecondsToTimer(mService.getDuration()));
-        mSeekBar.setMax((int) mService.getDuration());
+    private void updateDuration(long duration) {
+        mTotalTime.setText(Utilities.milliSecondsToTimer(duration));
+        mSeekBar.setMax((int) duration);
         mHandler.postDelayed(mRunnable, 0);
     }
 
@@ -113,17 +115,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void initializeViews() {
-        mSeekBar = findViewById(R.id.sb_progress);
-        mCurrentTime = findViewById(R.id.tv_current_time);
-        mTotalTime = findViewById(R.id.tv_total_time);
-        mButtonPrevious = findViewById(R.id.iv_previous);
-        mButtonPlay = findViewById(R.id.iv_play_pause);
-        mButtonNext = findViewById(R.id.iv_next);
-        mSeekBar.setOnSeekBarChangeListener(this);
-        mButtonPlay.setOnClickListener(this);
-    }
-
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
     }
@@ -140,7 +131,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStateChanged(int mediaState) {
+    public void notifyMediaStateChanged(int mediaState) {
         switch (mediaState) {
             case IMediaPlayerManager.MediaState.PLAYING:
                 mButtonPlay.setImageResource(R.drawable.btn_pause_on_press);
@@ -156,11 +147,36 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void showProgressBar() {
-        // TODO: 8/6/2018
+    @Override
+    public void onSongLoaded(long duration) {
+        updateDuration(duration);
+        dismissProgressBar();
+    }
+
+    private void initializeViews() {
+        mSeekBar = findViewById(R.id.sb_progress);
+        mCurrentTime = findViewById(R.id.tv_current_time);
+        mTotalTime = findViewById(R.id.tv_total_time);
+        mButtonPrevious = findViewById(R.id.iv_previous);
+        mButtonPlay = findViewById(R.id.iv_play_pause);
+        mButtonNext = findViewById(R.id.iv_next);
+        mSeekBar.setOnSeekBarChangeListener(this);
+        mButtonPlay.setOnClickListener(this);
+
+        initializeDialog();
+    }
+
+    private void initializeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Loading").setMessage("Music is loading, please wait!");
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        mDialog = builder.create();
+    }
+
+    private void showProgressBar() {
+        mDialog.show();
+    }
+
+    private void dismissProgressBar() {
+        mDialog.dismiss();
     }
 }

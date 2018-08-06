@@ -5,7 +5,7 @@ import android.media.MediaPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MediaPlayerManager implements IMediaPlayerManager {
+public class MediaPlayerManager implements IMediaPlayerManager, MediaPlayer.OnPreparedListener {
     private MediaPlayer mMediaPlayer;
     private Context mContext;
     private @MediaState
@@ -40,24 +40,21 @@ public class MediaPlayerManager implements IMediaPlayerManager {
     public void playSong(int resourceId) {
         mMediaPlayer = MediaPlayer.create(mContext, resourceId);
         mMediaPlayer.setVolume(100, 100);
-        mMediaPlayer.start();
-        mMediaState = MediaState.PLAYING;
-        updateMediaStateChanged();
+        mMediaPlayer.setOnPreparedListener(this);
+        setMediaState(MediaState.PREPARING);
     }
 
     @Override
     public void release() {
         stop();
         mMediaPlayer.release();
-        mMediaState = MediaState.STOPPED;
-        updateMediaStateChanged();
+        setMediaState(MediaState.STOPPED);
     }
 
     @Override
     public void stop() {
         mMediaPlayer.stop();
-        mMediaState = MediaState.STOPPED;
-        updateMediaStateChanged();
+        setMediaState(MediaState.STOPPED);
     }
 
     @Override
@@ -69,12 +66,11 @@ public class MediaPlayerManager implements IMediaPlayerManager {
     public void changeMediaState() {
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
-            mMediaState = MediaState.PAUSED;
+            setMediaState(MediaState.PAUSED);
         } else {
             mMediaPlayer.start();
-            mMediaState = MediaState.PLAYING;
+            setMediaState(MediaState.PLAYING);
         }
-        updateMediaStateChanged();
     }
 
     @Override
@@ -94,9 +90,28 @@ public class MediaPlayerManager implements IMediaPlayerManager {
         }
     }
 
-    private void updateMediaStateChanged() {
+    private void notifyMediaStateChanged() {
         for (OnMediaListener listener : mListeners) {
-            listener.onStateChanged(getMediaState());
+            listener.notifyMediaStateChanged(getMediaState());
         }
+    }
+
+    private void setMediaState(@MediaState int mediaState) {
+        mMediaState = mediaState;
+        notifyMediaStateChanged();
+    }
+
+    private void notifySongDurationChanged(){
+        for (OnMediaListener listener: mListeners){
+            listener.onSongLoaded(mMediaPlayer.getDuration());
+        }
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mp.start();
+        setMediaState(MediaState.PLAYING);
+        notifySongDurationChanged();
+
     }
 }
