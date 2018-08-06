@@ -1,5 +1,7 @@
 package com.badasspsycho.musicdemo;
 
+import java.util.Locale;
+
 public final class Utilities {
 
     public static final String UPDATE_PROGRESS = "com.badasspsycho.musicdemo.UPDATE_PROGRESS";
@@ -15,16 +17,13 @@ public final class Utilities {
         int seconds = (int) ((milliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
         // Add hour if included
         if (hours > 0) {
-            finalTimerString = hours + ":";
+            finalTimerString = String.format(Locale.getDefault(), "%d:", hours);
         }
 
-        // Add "1" to single-digit number
-        if (seconds < 10) {
-            secondsString = "0" + seconds;
-        } else {
-            secondsString = "" + seconds;
-        }
-        finalTimerString = finalTimerString + minutes + ":" + secondsString;
+        // Add "0" to single-digit number
+        secondsString = String.format(Locale.getDefault(), "%02d", seconds);
+        finalTimerString = String.format(Locale.getDefault(), "%s%d:%s", finalTimerString, minutes,
+                secondsString);
 
         return finalTimerString;
     }

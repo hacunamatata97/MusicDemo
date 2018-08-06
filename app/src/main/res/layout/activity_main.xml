@@ -7,67 +7,67 @@
     tools:context=".view.MainActivity">
 
     <TextView
-        android:id="@+id/tv_song_name"
+        android:id="@+id/text_song_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/tv_current_time"
+        android:layout_above="@id/text_current_time"
         android:layout_centerHorizontal="true"
         android:text="@string/song_name"
         android:textSize="@dimen/song_name_text_size"/>
 
     <TextView
-        android:id="@+id/tv_current_time"
+        android:id="@+id/text_current_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/sb_progress"
+        android:layout_above="@id/seek_bar"
         android:layout_marginStart="@dimen/timer_margin"
         android:text="@string/default_time"
         android:textSize="@dimen/timer_text_size"/>
 
     <TextView
-        android:id="@+id/tv_total_time"
+        android:id="@+id/text_total_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/sb_progress"
+        android:layout_above="@id/seek_bar"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/timer_margin"
         android:text="@string/default_time"
         android:textSize="@dimen/timer_text_size"/>
 
     <SeekBar
-        android:id="@+id/sb_progress"
+        android:id="@+id/seek_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/seek_bar_margin"/>
 
     <ImageView
-        android:id="@+id/iv_play_pause"
+        android:id="@+id/image_change_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sb_progress"
+        android:layout_below="@id/seek_bar"
         android:layout_centerHorizontal="true"
         android:src="@drawable/btn_play_on_press"
         tools:ignore="ContentDescription"/>
 
     <ImageView
-        android:id="@+id/iv_previous"
+        android:id="@+id/image_previous"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sb_progress"
+        android:layout_below="@id/seek_bar"
         android:layout_marginEnd="@dimen/seek_bar_margin"
-        android:layout_toStartOf="@id/iv_play_pause"
+        android:layout_toStartOf="@id/image_change_state"
         android:src="@drawable/btn_prev_on_press"
         tools:ignore="ContentDescription"/>
 
     <ImageView
-        android:id="@+id/iv_next"
+        android:id="@+id/image_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sb_progress"
+        android:layout_below="@id/seek_bar"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="@dimen/seek_bar_margin"
-        android:layout_toEndOf="@id/iv_play_pause"
+        android:layout_toEndOf="@id/image_change_state"
         android:src="@drawable/btn_next_on_press"
         tools:ignore="ContentDescription"/>
 

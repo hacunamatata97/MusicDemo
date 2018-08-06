@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, SeekBar.OnSeekBarChangeListener,
         IMediaPlayerManager.OnMediaListener {
 
+    private static final int DELAY_TIME = 1000;
     private final String TAG = MainActivity.class.getSimpleName();
 
     private SeekBar mSeekBar;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         public void run() {
             long currentTime = mService.getCurrentDuration();
             updateCurrentDuration(currentTime);
-            mHandler.postDelayed(this, 1000);
+            mHandler.postDelayed(this, DELAY_TIME);
         }
     };
 
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity
     private void updateDuration(long duration) {
         mTotalTime.setText(Utilities.milliSecondsToTimer(duration));
         mSeekBar.setMax((int) duration);
-        mHandler.postDelayed(mRunnable, 0);
+        mHandler.postDelayed(mRunnable, DELAY_TIME);
     }
 
     private void updateCurrentDuration(long currentDuration) {
@@ -105,12 +106,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_previous:
+            case R.id.image_previous:
                 break;
-            case R.id.iv_play_pause:
+            case R.id.image_change_state:
                 mService.changeMediaState();
                 break;
-            case R.id.iv_next:
+            case R.id.image_next:
                 break;
         }
     }
@@ -154,12 +155,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initializeViews() {
-        mSeekBar = findViewById(R.id.sb_progress);
-        mCurrentTime = findViewById(R.id.tv_current_time);
-        mTotalTime = findViewById(R.id.tv_total_time);
-        mButtonPrevious = findViewById(R.id.iv_previous);
-        mButtonPlay = findViewById(R.id.iv_play_pause);
-        mButtonNext = findViewById(R.id.iv_next);
+        mSeekBar = findViewById(R.id.seek_bar);
+        mCurrentTime = findViewById(R.id.text_current_time);
+        mTotalTime = findViewById(R.id.text_total_time);
+        mButtonPrevious = findViewById(R.id.image_previous);
+        mButtonPlay = findViewById(R.id.image_change_state);
+        mButtonNext = findViewById(R.id.image_next);
         mSeekBar.setOnSeekBarChangeListener(this);
         mButtonPlay.setOnClickListener(this);
 
