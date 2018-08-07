@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MusicDemo</string>
+    <string name="song_name">四月は君の嘘</string>
+    <string name="default_time">0:00</string>
 </resources>
